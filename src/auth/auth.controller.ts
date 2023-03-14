@@ -1,11 +1,12 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Req } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiCreatedResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreatedUserDto, ExistsDto, RegisterDto } from 'src/dto/auth.dto';
+import { CreatedUserDto, RegisterDto } from 'src/dto/auth.dto';
+import { ExceptionDto } from 'src/dto/exception.dto';
 import { AuthService } from './auth.service';
 
 @Controller('identity')
@@ -20,10 +21,10 @@ export class AuthController {
   })
   @ApiBadRequestResponse({
     description: 'User already exists.',
-    type: ExistsDto,
+    type: ExceptionDto,
   })
   @Post('register')
-  register(@Req() req): CreatedUserDto {
+  async register(@Req() req): Promise<CreatedUserDto> {
     return this.authService.register(req.body);
   }
 }

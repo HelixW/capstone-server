@@ -8,14 +8,6 @@ export class CreatedUserDto {
   token: string;
 }
 
-export class ExistsDto {
-  @ApiProperty()
-  error: true;
-
-  @ApiProperty()
-  message: string;
-}
-
 export class RegisterDto {
   @ApiProperty()
   email: string;
