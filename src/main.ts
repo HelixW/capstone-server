@@ -14,6 +14,7 @@ async function bootstrap() {
       'Make your browsing more efficient by uploading files to a private IPFS network.',
     )
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
