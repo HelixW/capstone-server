@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { StatusDto } from './dto/status.dto';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getStatus(): StatusDto {
+    return { message: 'Server online.' };
   }
 }
