@@ -1,10 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import {
-  ApiAcceptedResponse,
-  ApiHeaders,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { StatusDto } from './dto/status.dto';
 
