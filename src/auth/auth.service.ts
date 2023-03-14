@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDto } from 'src/dto/auth.dto';
+import { hash as createHash, genSalt, compare } from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -23,10 +24,18 @@ export class AuthService {
     // Add unique ID to user
     user.id = uuidv4();
 
+    // Salt and hash strategy
+    const saltRounds = 10;
+    const salt: string = await genSalt(saltRounds);
+    const hash: string = await createHash(user.password, salt);
+    user.password = hash;
+
     // Check if user already exists in database else, create user
     let res = await this.userModel.findOne({ email: user.email }).exec();
     if (res !== null) throw new BadRequestException('User already exists.');
-    else res = await this.userModel.create(user);
+    else {
+      res = await this.userModel.create(user);
+    }
 
     return {
       message: 'User registered.',
@@ -43,8 +52,9 @@ export class AuthService {
       throw new UnauthorizedException('User is not registered.');
 
     // Check password
-    if (user.password !== res.password)
-      throw new UnauthorizedException('Invalid email or password.');
+    const valid = await compare(user.password, res.password);
+
+    if (!valid) throw new UnauthorizedException('Invalid email or password.');
 
     return {
       message: 'Login successful.',
