@@ -41,10 +41,15 @@ export class IpfsService {
     //   );
 
     const ipfs = await this.ipfsClient();
-    const file = await ipfs.get(hash);
+    const resp = await ipfs.get(hash);
 
-    console.log(file);
-    console.log(typeof file);
+    // Rebuild file from buffer
+    let content = [];
+    for await (const chunk of resp) {
+      content = [...content, ...chunk];
+    }
+    const raw = Buffer.from(content).toString('utf-8');
+    console.log(raw);
 
     return 'Found';
   }
