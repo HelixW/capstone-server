@@ -68,7 +68,7 @@ export class IpfsService {
     const ipfs = await create({
       host: 'localhost',
       port: 5001,
-      protocol: 'tcp',
+      protocol: 'http',
     });
 
     return ipfs;
