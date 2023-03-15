@@ -1,4 +1,12 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Req,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -7,6 +15,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { ExceptionDto } from 'src/dto/exception.dto';
 import { HashDto, UploadDto } from 'src/dto/upload.dto';
@@ -59,8 +68,18 @@ export class IpfsController {
     type: ExceptionDto,
   })
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './src/uploads',
+        filename: (_, file, callback) => {
+          callback(null, file.originalname);
+        },
+      }),
+    }),
+  )
   @Post('upload')
-  upload(@Req() req): Promise<string> {
-    return this.ipfsService.upload(req.body);
+  upload(@UploadedFile() file: Express.Multer.File): Promise<string> {
+    return this.ipfsService.upload(file);
   }
 }

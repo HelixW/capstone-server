@@ -40,21 +40,22 @@ export class IpfsService {
     return 'Found';
   }
 
-  async upload(req): Promise<string> {
-    const file = req;
+  async upload(file): Promise<string> {
+    // If body isn't provided
+    // if (!data || !file) throw new BadRequestException('Invalid data provided.');
 
-    // If file isn't provided
-    if (!file) throw new BadRequestException('File not uploaded.');
+    // data.id = uuidv4();
 
-    file.id = uuidv4();
+    // console.log(data);
+    console.log(file);
 
     // Checking if the identical file already exists
-    const res = await this.uploadModel.findOne({ hash: file.hash }).exec();
-    if (res !== null)
-      throw new BadRequestException(
-        'Uploaded file already exists in the network.',
-      );
-    else await this.uploadModel.create(file);
+    // const res = await this.uploadModel.findOne({ hash: file.hash }).exec();
+    // if (res !== null)
+    //   throw new BadRequestException(
+    //     'Uploaded file already exists in the network.',
+    //   );
+    // else await this.uploadModel.create(file);
 
     return 'File uploaded';
   }
