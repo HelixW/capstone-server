@@ -46,7 +46,7 @@ export class AuthService {
   async login(req): Promise<UserDto> {
     const user = req;
 
-    // Check if user already exists in database
+    // Check if user is registered
     const res = await this.userModel.findOne({ email: user.email }).exec();
     if (res === null)
       throw new UnauthorizedException('User is not registered.');
