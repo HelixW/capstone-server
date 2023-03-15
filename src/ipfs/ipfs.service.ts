@@ -9,6 +9,7 @@ import { Model } from 'mongoose';
 import { Upload, UploadDocument } from 'src/schemas/upload.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'ipfs-http-client';
+import { SuccessfulUploadDto } from 'src/dto/upload.dto';
 
 @Injectable()
 export class IpfsService {
@@ -41,26 +42,33 @@ export class IpfsService {
     return 'Found';
   }
 
-  async upload(file, req): Promise<any> {
+  async upload(file, req): Promise<SuccessfulUploadDto> {
     // If body isn't provided
-    // if (!data || !file) throw new BadRequestException('Invalid data provided.');
+    if (!req || !file) throw new BadRequestException('Invalid data provided.');
 
-    // data.id = uuidv4();
+    const data: any = {};
 
-    const fileAccessLevel = Number(req.header.accesslevel);
-
+    // Uploading file to IPFS network
     const ipfs = await this.ipfsClient();
-    // Checking if the identical file already exists
-    // const res = await this.uploadModel.findOne({ hash: file.hash }).exec();
-    // if (res !== null)
-    //   throw new BadRequestException(
-    //     'Uploaded file already exists in the network.',
-    //   );
-    // else await this.uploadModel.create(file);
+    const ret = await ipfs.add(file);
 
-    const res = await ipfs.add(file);
-    console.log(String(res.cid));
-    return res.cid;
+    // Updating data document
+    data.id = uuidv4();
+    data.hash = String(ret.cid);
+    data.access = Number(req.header.accesslevel);
+
+    // Checking if the identical file already exists
+    const res = await this.uploadModel.findOne({ hash: file.hash }).exec();
+    if (res !== null)
+      throw new BadRequestException(
+        'Uploaded file already exists in the network.',
+      );
+    else await this.uploadModel.create(file);
+
+    return {
+      message: 'File successfully uploaded to the IPFS network.',
+      hash: data.hash,
+    };
   }
 
   async ipfsClient() {

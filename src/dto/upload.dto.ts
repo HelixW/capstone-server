@@ -17,3 +17,11 @@ export class UploadDto {
   @ApiProperty()
   access: number;
 }
+
+export class SuccessfulUploadDto {
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  hash: string;
+}

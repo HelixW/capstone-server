@@ -18,7 +18,7 @@ import {
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { ExceptionDto } from 'src/dto/exception.dto';
-import { HashDto, UploadDto } from 'src/dto/upload.dto';
+import { HashDto, SuccessfulUploadDto, UploadDto } from 'src/dto/upload.dto';
 import { IpfsService } from './ipfs.service';
 
 @Controller('ipfs')
@@ -79,7 +79,10 @@ export class IpfsController {
     }),
   )
   @Post('upload')
-  upload(@UploadedFile() file: Express.Multer.File, @Req() req): Promise<any> {
+  upload(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req,
+  ): Promise<SuccessfulUploadDto> {
     return this.ipfsService.upload(file, req);
   }
 }
