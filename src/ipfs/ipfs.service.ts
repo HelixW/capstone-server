@@ -49,7 +49,6 @@ export class IpfsService {
       content = [...content, ...chunk];
     }
     const raw = Buffer.from(content).toString('utf-8');
-    console.log(raw);
 
     return { message: 'File found in the network.', data: raw };
   }
