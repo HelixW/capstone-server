@@ -83,6 +83,6 @@ export class IpfsController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req,
   ): Promise<SuccessfulUploadDto> {
-    return this.ipfsService.upload(file, req);
+    return this.ipfsService.upload(file.buffer, req);
   }
 }
