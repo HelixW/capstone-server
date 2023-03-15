@@ -57,8 +57,7 @@ export class IpfsService {
     data.hash = String(ret.cid);
     data.access = 2;
 
-    console.log(typeof Number(req.header.accesslevel));
-    console.log(req.header.accesslevel);
+    console.log(req.header);
 
     // Checking if the identical file already exists
     const res = await this.uploadModel.findOne({ hash: data.hash }).exec();
