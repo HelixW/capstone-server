@@ -25,3 +25,11 @@ export class SuccessfulUploadDto {
   @ApiProperty()
   hash: string;
 }
+
+export class SuccessfulFetchDto {
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  data: string;
+}

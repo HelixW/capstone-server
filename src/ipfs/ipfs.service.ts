@@ -9,7 +9,7 @@ import { Model } from 'mongoose';
 import { Upload, UploadDocument } from 'src/schemas/upload.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'ipfs-http-client';
-import { SuccessfulUploadDto } from 'src/dto/upload.dto';
+import { SuccessfulFetchDto, SuccessfulUploadDto } from 'src/dto/upload.dto';
 import { createReadStream } from 'fs';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class IpfsService {
     @InjectModel(Upload.name) private uploadModel: Model<UploadDocument>,
   ) {}
 
-  async fetch(req): Promise<any> {
+  async fetch(req): Promise<SuccessfulFetchDto> {
     const hash = req.body.hash;
 
     // // If hash isn't provided
@@ -51,7 +51,7 @@ export class IpfsService {
     const raw = Buffer.from(content).toString('utf-8');
     console.log(raw);
 
-    return 'Found';
+    return { message: 'File found in the network.', data: raw };
   }
 
   async upload(fileData, req): Promise<SuccessfulUploadDto> {

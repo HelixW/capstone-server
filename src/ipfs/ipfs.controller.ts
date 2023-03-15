@@ -18,7 +18,12 @@ import {
 import { diskStorage } from 'multer';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { ExceptionDto } from 'src/dto/exception.dto';
-import { HashDto, SuccessfulUploadDto, UploadDto } from 'src/dto/upload.dto';
+import {
+  HashDto,
+  SuccessfulFetchDto,
+  SuccessfulUploadDto,
+  UploadDto,
+} from 'src/dto/upload.dto';
 import { IpfsService } from './ipfs.service';
 
 @Controller('ipfs')
@@ -45,7 +50,7 @@ export class IpfsController {
   })
   @UseGuards(JwtAuthGuard)
   @Post('fetch')
-  fetch(@Req() req): Promise<string> {
+  fetch(@Req() req): Promise<SuccessfulFetchDto> {
     return this.ipfsService.fetch(req);
   }
 
