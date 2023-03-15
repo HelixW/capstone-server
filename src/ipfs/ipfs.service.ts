@@ -10,6 +10,7 @@ import { Upload, UploadDocument } from 'src/schemas/upload.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'ipfs-http-client';
 import { SuccessfulUploadDto } from 'src/dto/upload.dto';
+import { createReadStream } from 'fs';
 
 @Injectable()
 export class IpfsService {
@@ -42,9 +43,12 @@ export class IpfsService {
     return 'Found';
   }
 
-  async upload(file, req): Promise<SuccessfulUploadDto> {
+  async upload(fileData, req): Promise<SuccessfulUploadDto> {
     // If body isn't provided
-    if (!req || !file) throw new BadRequestException('Invalid data provided.');
+    if (!req || !fileData)
+      throw new BadRequestException('Invalid data provided.');
+
+    const file = createReadStream(fileData.path);
 
     const data: any = {};
 
@@ -67,7 +71,8 @@ export class IpfsService {
 
     return {
       message: 'File successfully uploaded to the IPFS network.',
-      hash: data.hash,
+      // hash: data.hash,
+      hash: '',
     };
   }
 
