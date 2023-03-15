@@ -58,12 +58,12 @@ export class IpfsService {
     data.access = Number(req.header.accesslevel);
 
     // Checking if the identical file already exists
-    const res = await this.uploadModel.findOne({ hash: file.hash }).exec();
+    const res = await this.uploadModel.findOne({ hash: data.hash }).exec();
     if (res !== null)
       throw new BadRequestException(
         'Uploaded file already exists in the network.',
       );
-    else await this.uploadModel.create(file);
+    else await this.uploadModel.create(data);
 
     return {
       message: 'File successfully uploaded to the IPFS network.',
