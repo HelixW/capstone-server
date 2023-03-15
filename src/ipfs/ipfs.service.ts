@@ -59,9 +59,8 @@ export class IpfsService {
     // else await this.uploadModel.create(file);
 
     const res = await ipfs.add(file);
-    console.log(typeof res.cid);
-
-    return String(res.cid);
+    console.log(String(res.cid));
+    return res.cid;
   }
 
   async ipfsClient() {
