@@ -79,7 +79,7 @@ export class IpfsController {
     }),
   )
   @Post('upload')
-  upload(@UploadedFile() file: Express.Multer.File): Promise<string> {
-    return this.ipfsService.upload(file);
+  upload(@UploadedFile() file: Express.Multer.File, @Req() req): Promise<any> {
+    return this.ipfsService.upload(file, req);
   }
 }

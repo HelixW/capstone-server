@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Upload, UploadDocument } from 'src/schemas/upload.schema';
 import { v4 as uuidv4 } from 'uuid';
+import { create } from 'ipfs-http-client';
 
 @Injectable()
 export class IpfsService {
@@ -16,7 +17,7 @@ export class IpfsService {
     @InjectModel(Upload.name) private uploadModel: Model<UploadDocument>,
   ) {}
 
-  async fetch(req): Promise<string> {
+  async fetch(req): Promise<any> {
     const hash = req.body.hash;
 
     // If hash isn't provided
@@ -40,15 +41,15 @@ export class IpfsService {
     return 'Found';
   }
 
-  async upload(file): Promise<string> {
+  async upload(file, req): Promise<any> {
     // If body isn't provided
     // if (!data || !file) throw new BadRequestException('Invalid data provided.');
 
     // data.id = uuidv4();
 
-    // console.log(data);
-    console.log(file);
+    const fileAccessLevel = Number(req.header.accesslevel);
 
+    const ipfs = await this.ipfsClient();
     // Checking if the identical file already exists
     // const res = await this.uploadModel.findOne({ hash: file.hash }).exec();
     // if (res !== null)
@@ -57,6 +58,19 @@ export class IpfsService {
     //   );
     // else await this.uploadModel.create(file);
 
+    const res = await ipfs.add('Hello');
+    console.log(res);
+
     return 'File uploaded';
+  }
+
+  async ipfsClient() {
+    const ipfs = await create({
+      host: 'localhost',
+      port: 5001,
+      protocol: 'tcp',
+    });
+
+    return ipfs;
   }
 }
