@@ -71,8 +71,7 @@ export class IpfsService {
 
     return {
       message: 'File successfully uploaded to the IPFS network.',
-      // hash: data.hash,
-      hash: '',
+      hash: data.hash,
     };
   }
 
