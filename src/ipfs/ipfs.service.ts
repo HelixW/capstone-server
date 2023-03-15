@@ -41,7 +41,7 @@ export class IpfsService {
     //   );
 
     const ipfs = await this.ipfsClient();
-    const text = await ipfs.cat(hash);
+    const resp = await ipfs.cat(hash);
 
     // Rebuild file from buffer
     let content = [];
