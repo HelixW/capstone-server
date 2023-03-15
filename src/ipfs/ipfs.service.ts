@@ -55,9 +55,7 @@ export class IpfsService {
     // Updating data document
     data.id = uuidv4();
     data.hash = String(ret.cid);
-    data.access = 2;
-
-    console.log(req.header.alevel);
+    data.access = Number(req.headers.alevel);
 
     // Checking if the identical file already exists
     const res = await this.uploadModel.findOne({ hash: data.hash }).exec();
