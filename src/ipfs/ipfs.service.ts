@@ -58,10 +58,10 @@ export class IpfsService {
     //   );
     // else await this.uploadModel.create(file);
 
-    const res = await ipfs.add('Hello');
-    console.log(res);
+    const res = await ipfs.add(file);
+    console.log(res.path);
 
-    return 'File uploaded';
+    return res.path;
   }
 
   async ipfsClient() {
