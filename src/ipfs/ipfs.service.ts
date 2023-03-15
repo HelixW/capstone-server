@@ -22,23 +22,29 @@ export class IpfsService {
   async fetch(req): Promise<any> {
     const hash = req.body.hash;
 
-    // If hash isn't provided
-    if (!hash) throw new BadRequestException('Hash of file not found.');
+    // // If hash isn't provided
+    // if (!hash) throw new BadRequestException('Hash of file not found.');
 
-    // Finding the file
-    const res = await this.uploadModel.findOne({ hash }).exec();
-    if (res === null)
-      throw new BadRequestException('Hash of file provided is invalid');
+    // // Finding the file
+    // const res = await this.uploadModel.findOne({ hash }).exec();
+    // if (res === null)
+    //   throw new BadRequestException('Hash of file provided is invalid');
 
-    // Checking for authorisation
-    const token = req.headers.authorization.split(' ')[1];
+    // // Checking for authorisation
+    // const token = req.headers.authorization.split(' ')[1];
 
-    const decodedToken: any = this.jwtService.decode(token);
+    // const decodedToken: any = this.jwtService.decode(token);
 
-    if (decodedToken.access !== res.access)
-      throw new UnauthorizedException(
-        'User is not authorised to perform this action.',
-      );
+    // if (decodedToken.access !== res.access)
+    //   throw new UnauthorizedException(
+    //     'User is not authorised to perform this action.',
+    //   );
+
+    const ipfs = await this.ipfsClient();
+    const file = await ipfs.get(hash);
+
+    console.log(file);
+    console.log(typeof file);
 
     return 'Found';
   }
