@@ -67,9 +67,14 @@ export class IpfsService {
     const ret = await ipfs.add(file);
 
     // Updating data document
+    const re = /(?:\.([^.]+))?$/;
+
     data.id = uuidv4();
     data.hash = String(ret.cid);
     data.access = Number(req.headers.alevel);
+    data.fileType = re.exec(fileData.filename)[1];
+    data.size = fileData.size;
+    data.name = fileData.filename;
 
     // Checking if the identical file already exists
     const res = await this.uploadModel.findOne({ hash: data.hash }).exec();

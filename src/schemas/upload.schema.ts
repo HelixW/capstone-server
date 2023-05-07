@@ -13,6 +13,15 @@ export class Upload {
 
   @Prop({ required: true })
   access: number;
+
+  @Prop({ required: true })
+  fileType: string;
+
+  @Prop({ required: true })
+  size: number;
+
+  @Prop({ required: true })
+  name: string;
 }
 
 export const UploadSchema = SchemaFactory.createForClass(Upload);
