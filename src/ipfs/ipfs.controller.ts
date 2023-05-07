@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Req,
   UploadedFile,
@@ -25,6 +26,8 @@ import {
   UploadDto,
 } from 'src/dto/upload.dto';
 import { IpfsService } from './ipfs.service';
+import { UserDto } from 'src/dto/auth.dto';
+import { SuccessfulBrowseDto } from 'src/dto/browse.dto';
 
 @Controller('ipfs')
 export class IpfsController {
@@ -38,7 +41,7 @@ export class IpfsController {
   })
   @ApiOkResponse({
     description: 'File fetch successful.',
-    // type: UserDto,
+    type: UserDto,
   })
   @ApiUnauthorizedResponse({
     description: 'User is not authorised to perform this action.',
@@ -62,7 +65,7 @@ export class IpfsController {
   })
   @ApiOkResponse({
     description: 'File upload successful.',
-    // type: UserDto,
+    type: UserDto,
   })
   @ApiUnauthorizedResponse({
     description: 'User is not authorised to perform this action.',
@@ -89,5 +92,21 @@ export class IpfsController {
     @Req() req,
   ): Promise<SuccessfulUploadDto> {
     return this.ipfsService.upload(file, req);
+  }
+
+  @ApiBearerAuth()
+  @ApiTags('IPFS')
+  @ApiOkResponse({
+    description: 'Files successfully fetched',
+    type: SuccessfulBrowseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorised to perform this action.',
+    type: ExceptionDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('browse')
+  browse(@Req() req): Promise<SuccessfulBrowseDto> {
+    return this.ipfsService.browse(req);
   }
 }

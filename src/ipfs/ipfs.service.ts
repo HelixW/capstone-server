@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { create } from 'ipfs-http-client';
 import { SuccessfulFetchDto, SuccessfulUploadDto } from 'src/dto/upload.dto';
 import { createReadStream } from 'fs';
+import { SuccessfulBrowseDto } from 'src/dto/browse.dto';
 
 @Injectable()
 export class IpfsService {
@@ -98,5 +99,23 @@ export class IpfsService {
     });
 
     return ipfs;
+  }
+
+  async browse(req): Promise<SuccessfulBrowseDto> {
+    // Checking for authorisation
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken: any = this.jwtService.decode(token);
+
+    if (!decodedToken)
+      throw new UnauthorizedException(
+        'User is not authorised to perform this action.',
+      );
+
+    const files = await this.uploadModel.find();
+
+    return {
+      message: 'Files fetched from the network successfully.',
+      files,
+    };
   }
 }
