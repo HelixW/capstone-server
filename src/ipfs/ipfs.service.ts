@@ -93,9 +93,7 @@ export class IpfsService {
       console.log('After:');
       console.log(ver.allVersions);
 
-      await this.uploadModel
-        .findOneAndUpdate({ name: data.filename }, data)
-        .exec();
+      await this.uploadModel.findOneAndUpdate({ name: data.name }, data).exec();
 
       return {
         message: 'New version of file created successfully.',
