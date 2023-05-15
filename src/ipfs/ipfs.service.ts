@@ -131,14 +131,20 @@ export class IpfsService {
     }
     const raw = Buffer.from(content);
 
-    fs.writeFile(`./downloads/${res.name}`, raw, (err: any) => {
-      if (err) {
-        console.log(err);
-        throw new BadRequestException('File could not be saved in the server.');
-      }
+    await fs.writeFile(
+      `${process.cwd()}/downloads/${res.name}`,
+      raw,
+      (err: any) => {
+        if (err) {
+          console.log(err);
+          throw new BadRequestException(
+            'File could not be saved in the server.',
+          );
+        }
 
-      console.log('File successfully saved to folder.');
-    });
+        console.log('File successfully saved to folder.');
+      },
+    );
 
     return fs.createReadStream(`./downloads/${res.name}`);
   }
