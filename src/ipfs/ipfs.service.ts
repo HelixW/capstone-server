@@ -133,6 +133,7 @@ export class IpfsService {
 
     fs.writeFile(`./downloads/${res.name}`, raw, (err: any) => {
       if (err) {
+        console.log(err);
         throw new BadRequestException('File could not be saved in the server.');
       }
 
