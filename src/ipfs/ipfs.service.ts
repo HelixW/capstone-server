@@ -147,7 +147,8 @@ export class IpfsService {
     );
 
     response.setHeader(
-      `Content-Disposition', 'attachment; filename=${res.name}`,
+      'Content-Disposition',
+      `attachment; filename=${res.name}`,
     );
     return response.download(`${process.cwd()}/src/downloads/${res.name}`);
   }
