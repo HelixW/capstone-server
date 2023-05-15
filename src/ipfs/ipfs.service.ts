@@ -161,7 +161,7 @@ export class IpfsService {
     const raw = Buffer.from(content);
 
     await fs.writeFile(
-      `${process.cwd()}/src/downloads/${fileName}`,
+      `${process.cwd()}/src/downloads/${fileName ? fileName : res.name}`,
       raw,
       (err: any) => {
         if (err) {
