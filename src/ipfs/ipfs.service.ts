@@ -75,7 +75,7 @@ export class IpfsService {
 
     // Checking if the identical file already exists
     const res = await this.uploadModel.findOne({ hash: data.hash }).exec();
-    const ver = await this.uploadModel.findOne({ name: data.filename }).exec();
+    const ver = await this.uploadModel.findOne({ name: data.name }).exec();
 
     if (res !== null)
       throw new BadRequestException(
@@ -86,11 +86,9 @@ export class IpfsService {
       data.version = true;
       data.allVersions = ver.allVersions.unshift(res.hash);
 
-      const updated = await this.uploadModel
+      await this.uploadModel
         .findOneAndUpdate({ name: data.filename }, data)
         .exec();
-
-      console.log(updated);
 
       return {
         message: 'New version of file created successfully.',
