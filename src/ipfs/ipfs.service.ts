@@ -117,8 +117,7 @@ export class IpfsService {
 
   async download(hash) {
     const res = await this.uploadModel.findOne({ hash }).exec();
-    console.log(hash);
-    if (res !== null)
+    if (res === null)
       throw new BadRequestException('File not found with the given hash.');
 
     // TODO: remove buffer read
