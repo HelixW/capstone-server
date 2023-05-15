@@ -74,8 +74,8 @@ export class IpfsController {
   })
   @UseGuards(JwtAuthGuard)
   @Get('download/:hash')
-  download(@Param('hash') hash, @Res() res) {
-    return this.ipfsService.download(res, hash);
+  download(@Param('hash') hash, @Res() response) {
+    return this.ipfsService.download(response, hash);
   }
 
   @ApiBearerAuth()

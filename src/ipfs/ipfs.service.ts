@@ -115,7 +115,7 @@ export class IpfsService {
     };
   }
 
-  async download(res, hash) {
+  async download(response, hash) {
     const res = await this.uploadModel.findOne({ hash }).exec();
     if (res === null)
       throw new BadRequestException('File not found with the given hash.');
@@ -146,6 +146,6 @@ export class IpfsService {
       },
     );
 
-    return res.download(`${process.cwd()}/src/downloads/${res.name}`);
+    return response.download(`${process.cwd()}/src/downloads/${res.name}`);
   }
 }
