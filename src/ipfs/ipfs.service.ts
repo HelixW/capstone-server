@@ -12,6 +12,7 @@ import { create } from 'ipfs-http-client';
 import { SuccessfulFetchDto, SuccessfulUploadDto } from 'src/dto/upload.dto';
 import { createReadStream } from 'fs';
 import { SuccessfulBrowseDto } from 'src/dto/browse.dto';
+import * as fs from 'fs';
 
 @Injectable()
 export class IpfsService {
@@ -40,18 +41,6 @@ export class IpfsService {
       throw new UnauthorizedException(
         'User is not authorised to perform this action.',
       );
-
-    // TODO: remove buffer read
-    const ipfs = await this.ipfsClient();
-    const resp = await ipfs.cat(hash);
-
-    // Rebuild file from buffer
-    let content = [];
-    for await (const chunk of resp) {
-      content = [...content, ...chunk];
-    }
-    const raw = Buffer.from(content).toString('utf-8');
-    console.log(raw);
 
     return {
       message: 'File found in the network.',
@@ -123,5 +112,32 @@ export class IpfsService {
       message: 'Files fetched from the network successfully.',
       files,
     };
+  }
+
+  async download(hash) {
+    const res = await this.uploadModel.findOne({ hash }).exec();
+    if (res !== null)
+      throw new BadRequestException('File not found with the given hash.');
+
+    // TODO: remove buffer read
+    const ipfs = await this.ipfsClient();
+    const resp = await ipfs.cat(hash);
+
+    // Rebuild file from buffer
+    let content = [];
+    for await (const chunk of resp) {
+      content = [...content, ...chunk];
+    }
+    const raw = Buffer.from(content);
+
+    fs.writeFile(`./downloads/${res.name}`, raw, (err: any) => {
+      if (err) {
+        throw new BadRequestException('File could not be saved in the server.');
+      }
+
+      console.log('File successfully saved to folder.');
+    });
+
+    return fs.createReadStream(`./downloads/${res.name}`);
   }
 }

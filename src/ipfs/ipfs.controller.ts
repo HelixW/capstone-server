@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Post,
   Req,
   UploadedFile,
@@ -55,6 +56,25 @@ export class IpfsController {
   @Post('fetch')
   fetch(@Req() req): Promise<SuccessfulFetchDto> {
     return this.ipfsService.fetch(req);
+  }
+
+  @ApiBearerAuth()
+  @ApiTags('IPFS')
+  @ApiOkResponse({
+    description: 'File downloaded successfully.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorised to perform this action.',
+    type: ExceptionDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Hash of file provided is invalid.',
+    type: ExceptionDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('products/:hash')
+  download(@Param('hash') hash) {
+    return this.ipfsService.download(hash);
   }
 
   @ApiBearerAuth()
