@@ -147,6 +147,7 @@ export class IpfsService {
     );
 
     const data = createReadStream(`${process.cwd()}/src/downloads/${res.name}`);
+    response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
     response.setHeader(
       'Content-Disposition',
       `attachment; filename=${res.name}`,
