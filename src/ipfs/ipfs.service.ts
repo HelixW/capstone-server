@@ -132,7 +132,7 @@ export class IpfsService {
     const raw = Buffer.from(content);
 
     await fs.writeFile(
-      `${process.cwd()}/downloads/${res.name}`,
+      `${process.cwd()}/src/downloads/${res.name}`,
       raw,
       (err: any) => {
         if (err) {
@@ -146,6 +146,6 @@ export class IpfsService {
       },
     );
 
-    return fs.createReadStream(`./downloads/${res.name}`);
+    return fs.createReadStream(`${process.cwd()}/src/downloads/${res.name}`);
   }
 }
