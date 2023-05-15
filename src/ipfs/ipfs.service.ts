@@ -41,6 +41,7 @@ export class IpfsService {
         'User is not authorised to perform this action.',
       );
 
+    // TODO: remove buffer read
     const ipfs = await this.ipfsClient();
     const resp = await ipfs.cat(hash);
 
@@ -50,8 +51,13 @@ export class IpfsService {
       content = [...content, ...chunk];
     }
     const raw = Buffer.from(content).toString('utf-8');
+    console.log(raw);
 
-    return { message: 'File found in the network.', data: raw };
+    return {
+      message: 'File found in the network.',
+      name: res.name,
+      size: res.size,
+    };
   }
 
   async upload(fileData, req): Promise<SuccessfulUploadDto> {

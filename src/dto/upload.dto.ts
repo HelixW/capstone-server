@@ -31,5 +31,8 @@ export class SuccessfulFetchDto {
   message: string;
 
   @ApiProperty()
-  data: string;
+  name: string;
+
+  @ApiProperty()
+  size: number;
 }
