@@ -86,9 +86,11 @@ export class IpfsService {
       data.version = true;
       data.allVersions = ver.allVersions.unshift(res.hash);
 
-      await this.uploadModel
+      const updated = await this.uploadModel
         .findOneAndUpdate({ name: data.filename }, data)
         .exec();
+
+      console.log(updated);
 
       return {
         message: 'New version of file created successfully.',
