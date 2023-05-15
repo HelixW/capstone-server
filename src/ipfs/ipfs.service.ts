@@ -136,9 +136,18 @@ export class IpfsService {
   }
 
   async download(response, hash) {
-    const res = await this.uploadModel.findOne({ hash }).exec();
-    if (res === null)
-      throw new BadRequestException('File not found with the given hash.');
+    let res = await this.uploadModel.findOne({ hash }).exec();
+    let fileName = '';
+
+    if (res === null) {
+      res = await this.uploadModel.findOne({
+        allVersions: { $elemMatch: { $eq: hash } },
+      });
+
+      if (res === null)
+        throw new BadRequestException('File not found with the given hash.');
+      else fileName = res.name;
+    }
 
     // TODO: remove buffer read
     const ipfs = await this.ipfsClient();
@@ -152,7 +161,7 @@ export class IpfsService {
     const raw = Buffer.from(content);
 
     await fs.writeFile(
-      `${process.cwd()}/src/downloads/${res.name}`,
+      `${process.cwd()}/src/downloads/${fileName}`,
       raw,
       (err: any) => {
         if (err) {
