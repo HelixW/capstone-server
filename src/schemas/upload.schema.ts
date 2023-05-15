@@ -22,6 +22,12 @@ export class Upload {
 
   @Prop({ required: true })
   name: string;
+
+  @Prop({ required: false, default: false })
+  version: boolean;
+
+  @Prop({ required: false })
+  allVersions: Array<string>;
 }
 
 export const UploadSchema = SchemaFactory.createForClass(Upload);

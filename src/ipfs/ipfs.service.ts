@@ -75,15 +75,30 @@ export class IpfsService {
 
     // Checking if the identical file already exists
     const res = await this.uploadModel.findOne({ hash: data.hash }).exec();
+    const ver = await this.uploadModel.findOne({ name: data.filename }).exec();
+
     if (res !== null)
       throw new BadRequestException(
         'Uploaded file already exists in the network.',
       );
-    else await this.uploadModel.create(data);
+    else if (ver !== null) {
+      // Add version to beginning of array
+      data.version = true;
+      data.allVersions = ver.allVersions.unshift(res.hash);
+
+      await this.uploadModel.findOneAndReplace({ name: data.filename }, data);
+
+      return {
+        message: 'New version of file created successfully.',
+        hash: data.hash,
+        version: true,
+      };
+    } else await this.uploadModel.create(data);
 
     return {
       message: 'File successfully uploaded to the IPFS network.',
       hash: data.hash,
+      version: false,
     };
   }
 

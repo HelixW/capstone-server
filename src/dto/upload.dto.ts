@@ -24,6 +24,9 @@ export class SuccessfulUploadDto {
 
   @ApiProperty()
   hash: string;
+
+  @ApiProperty()
+  version: boolean;
 }
 
 export class SuccessfulFetchDto {
