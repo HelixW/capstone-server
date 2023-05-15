@@ -41,4 +41,10 @@ export class SuccessfulFetchDto {
 
   @ApiProperty()
   hash: string;
+
+  @ApiProperty()
+  version: boolean;
+
+  @ApiProperty()
+  allVersions: Array<string>;
 }

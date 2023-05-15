@@ -47,6 +47,8 @@ export class IpfsService {
       name: res.name,
       size: res.size,
       hash: res.hash,
+      version: res.version,
+      allVersions: res.allVersions,
     };
   }
 
