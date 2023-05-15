@@ -83,9 +83,9 @@ export class IpfsService {
       );
     else if (ver !== null) {
       // Add version to beginning of array
+
       data.version = true;
-      if (ver.allVersions === null) data.allVersions = [res.hash];
-      else data.allVersions = ver.allVersions.unshift(res.hash);
+      data.allVersions = ver.allVersions.unshift(ver.hash);
 
       await this.uploadModel
         .findOneAndUpdate({ name: data.filename }, data)
