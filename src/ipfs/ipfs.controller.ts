@@ -72,7 +72,7 @@ export class IpfsController {
     type: ExceptionDto,
   })
   @UseGuards(JwtAuthGuard)
-  @Get('products/:hash')
+  @Get('download/:hash')
   download(@Param('hash') hash) {
     return this.ipfsService.download(hash);
   }
