@@ -86,20 +86,22 @@ export class IpfsService {
       data.version = true;
       data.allVersions = ver.allVersions.unshift(res.hash);
 
-      await this.uploadModel.findOneAndReplace({ name: data.filename }, data);
+      await this.uploadModel.findOneAndUpdate({ name: data.filename }, data);
 
       return {
         message: 'New version of file created successfully.',
         hash: data.hash,
         version: true,
       };
-    } else await this.uploadModel.create(data);
+    } else {
+      await this.uploadModel.create(data);
 
-    return {
-      message: 'File successfully uploaded to the IPFS network.',
-      hash: data.hash,
-      version: false,
-    };
+      return {
+        message: 'File successfully uploaded to the IPFS network.',
+        hash: data.hash,
+        version: false,
+      };
+    }
   }
 
   async ipfsClient() {
