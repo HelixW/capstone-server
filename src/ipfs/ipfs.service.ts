@@ -175,11 +175,13 @@ export class IpfsService {
       },
     );
 
-    const data = createReadStream(`${process.cwd()}/src/downloads/${res.name}`);
+    const data = createReadStream(
+      `${process.cwd()}/src/downloads/${fileName ? fileName : res.name}`,
+    );
     response.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
     response.setHeader(
       'Content-Disposition',
-      `attachment; filename=${res.name}`,
+      `attachment; filename=${fileName ? fileName : res.name}`,
     );
     return data.pipe(response);
   }
