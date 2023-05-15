@@ -83,15 +83,9 @@ export class IpfsService {
       );
     else if (ver !== null) {
       // Add version to beginning of array
-
-      console.log('Before:');
-      console.log(ver.allVersions);
-
       data.version = true;
-      data.allVersions = ver.allVersions.unshift(ver.hash);
-
-      console.log('After:');
-      console.log(ver.allVersions);
+      ver.allVersions.unshift(ver.hash);
+      data.allVersions = ver.allVersions;
 
       await this.uploadModel.findOneAndUpdate({ name: data.name }, data).exec();
 
