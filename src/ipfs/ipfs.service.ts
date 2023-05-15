@@ -46,6 +46,7 @@ export class IpfsService {
       message: 'File found in the network.',
       name: res.name,
       size: res.size,
+      hash: res.hash,
     };
   }
 

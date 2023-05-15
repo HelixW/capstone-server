@@ -35,4 +35,7 @@ export class SuccessfulFetchDto {
 
   @ApiProperty()
   size: number;
+
+  @ApiProperty()
+  hash: string;
 }
