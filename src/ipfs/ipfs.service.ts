@@ -146,10 +146,11 @@ export class IpfsService {
       },
     );
 
+    const data = createReadStream(`${process.cwd()}/src/downloads/${res.name}`);
     response.setHeader(
       'Content-Disposition',
       `attachment; filename=${res.name}`,
     );
-    return response.download(`${process.cwd()}/src/downloads/${res.name}`);
+    return data.pipe(response);
   }
 }
