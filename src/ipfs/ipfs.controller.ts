@@ -4,6 +4,7 @@ import {
   Param,
   Post,
   Req,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -73,8 +74,8 @@ export class IpfsController {
   })
   @UseGuards(JwtAuthGuard)
   @Get('download/:hash')
-  download(@Param('hash') hash) {
-    return this.ipfsService.download(hash);
+  download(@Param('hash') hash, @Res() res) {
+    return this.ipfsService.download(res, hash);
   }
 
   @ApiBearerAuth()
