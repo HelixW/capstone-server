@@ -8,7 +8,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserDto, RegisterDto, LoginDto, ValidateDto } from 'src/dto/auth.dto';
+import {
+  UserDto,
+  RegisterDto,
+  LoginDto,
+  ValidateDto,
+  TwoFADto,
+} from 'src/dto/auth.dto';
 import { ExceptionDto } from 'src/dto/exception.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt.guard';
@@ -61,5 +67,21 @@ export class AuthController {
   @Get('validate')
   validate(): Promise<ValidateDto> {
     return this.authService.validate();
+  }
+
+  @ApiBearerAuth()
+  @ApiTags('Authentication')
+  @ApiOkResponse({
+    description: 'User is authenticated.',
+    type: TwoFADto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorised to perform this action.',
+    type: ExceptionDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('2fa')
+  twofa(@Req() req): Promise<TwoFADto> {
+    return this.authService.twofa(req);
   }
 }

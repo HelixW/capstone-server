@@ -34,3 +34,11 @@ export class ValidateDto {
   @ApiProperty()
   message: string;
 }
+
+export class TwoFADto {
+  @ApiProperty()
+  message: string;
+
+  @ApiProperty()
+  qr: string;
+}
