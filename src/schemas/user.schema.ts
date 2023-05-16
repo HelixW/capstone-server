@@ -22,6 +22,9 @@ export class User {
 
   @Prop({ default: '2' })
   access: number;
+
+  @Prop()
+  secret: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

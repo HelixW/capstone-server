@@ -81,7 +81,23 @@ export class AuthController {
   })
   @UseGuards(JwtAuthGuard)
   @Get('2fa')
-  twofa(@Req() req): Promise<TwoFADto> {
-    return this.authService.twofa(req);
+  twoFa(@Req() req): Promise<TwoFADto> {
+    return this.authService.twoFa(req);
+  }
+
+  @ApiBearerAuth()
+  @ApiTags('Authentication')
+  @ApiOkResponse({
+    description: 'User is authenticated.',
+    type: UserDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorised to perform this action.',
+    type: ExceptionDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Post('2faverify')
+  twoFaVerify(@Req() req): Promise<UserDto> {
+    return this.authService.twoFaVerify(req);
   }
 }

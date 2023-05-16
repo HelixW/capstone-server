@@ -41,7 +41,11 @@ export class AuthService {
 
     return {
       message: 'User registered.',
-      token: this.jwtService.sign({ id: user.id, access: res.access }),
+      token: this.jwtService.sign({
+        id: user.id,
+        access: res.access,
+        admin: false,
+      }),
     };
   }
 
@@ -60,7 +64,11 @@ export class AuthService {
 
     return {
       message: 'Login successful.',
-      token: this.jwtService.sign({ id: res.id, access: res.access }),
+      token: this.jwtService.sign({
+        id: res.id,
+        access: res.access,
+        admin: false,
+      }),
     };
   }
 
@@ -70,7 +78,7 @@ export class AuthService {
     };
   }
 
-  async twofa(req): Promise<TwoFADto> {
+  async twoFa(req): Promise<TwoFADto> {
     // Checking for authorisation
     const token = req.headers.authorization.split(' ')[1];
 
@@ -84,9 +92,50 @@ export class AuthService {
     const secret = await speakeasy.generateSecret({ name: 'Decentralised FS' });
     const qr = await qrcode.toDataURL(secret.otpauth_url);
 
+    await this.userModel
+      .findOneAndUpdate({ id: decodedToken.id }, { secret: secret.base32 })
+      .exec();
+
     return {
       message: 'User authorised.',
       qr,
+    };
+  }
+
+  async twoFaVerify(req): Promise<UserDto> {
+    // Checking for authorisation
+    const token = req.headers.authorization.split(' ')[1];
+
+    const decodedToken: any = this.jwtService.decode(token);
+
+    if (decodedToken.access !== 1)
+      throw new UnauthorizedException(
+        'User is not authorised to perform this action.',
+      );
+
+    // Fetch temporary secret from user
+    const res = await this.userModel.findOne({ id: decodedToken.id }).exec();
+
+    const base32Secret = res.secret;
+
+    // Check if TOTP provided is valid
+    const userToken = req.body.totp;
+
+    const verified = speakeasy.totp.verify({
+      secret: base32Secret,
+      encoding: 'base32',
+      token: userToken,
+    });
+
+    if (!verified) throw new UnauthorizedException('Invalid token provided.');
+
+    return {
+      message: 'User registered.',
+      token: this.jwtService.sign({
+        id: decodedToken.id,
+        access: decodedToken.access,
+        admin: true,
+      }),
     };
   }
 }
