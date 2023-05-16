@@ -10,7 +10,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { TwoFADto, UserDto, ValidateDto } from 'src/dto/auth.dto';
 import { hash as createHash, genSalt, compare } from 'bcrypt';
-import { generateSecret } from 'speakeasy';
+import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 
 @Injectable()
@@ -81,18 +81,8 @@ export class AuthService {
         'User is not authorised to perform this action.',
       );
 
-    // Generate QR Code
-    let qr = '';
-
-    const secret = await generateSecret({ name: 'Decentralised FS' });
-    await qrcode.toDataURL(secret.otpauth_url, (err, data) => {
-      if (err) {
-        console.log(err);
-        throw new UnauthorizedException('QR code could not be generated.');
-      }
-
-      qr = data;
-    });
+    const secret = await speakeasy.generateSecret({ name: 'Decentralised FS' });
+    const qr = await qrcode.toDataURL(secret.otpauth_url);
 
     return {
       message: 'User authorised.',
