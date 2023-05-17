@@ -78,6 +78,38 @@ export class AuthService {
     };
   }
 
+  async validateAccess(req): Promise<ValidateDto> {
+    // Checking for authorisation
+    const token = req.headers.authorization.split(' ')[1];
+
+    const decodedToken: any = this.jwtService.decode(token);
+
+    if (decodedToken.access !== 1)
+      throw new UnauthorizedException(
+        'User is not authorised to perform this action.',
+      );
+
+    return {
+      message: 'User authorised.',
+    };
+  }
+
+  async validateAdmin(req): Promise<ValidateDto> {
+    // Checking for authorisation
+    const token = req.headers.authorization.split(' ')[1];
+
+    const decodedToken: any = this.jwtService.decode(token);
+
+    if (decodedToken.admin !== true)
+      throw new UnauthorizedException(
+        'User is not authorised to perform this action.',
+      );
+
+    return {
+      message: 'User authorised.',
+    };
+  }
+
   async twoFa(req): Promise<TwoFADto> {
     // Checking for authorisation
     const token = req.headers.authorization.split(' ')[1];

@@ -42,3 +42,8 @@ export class TwoFADto {
   @ApiProperty()
   qr: string;
 }
+
+export class TOTPDto {
+  @ApiProperty()
+  totp: string;
+}

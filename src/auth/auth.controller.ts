@@ -14,6 +14,7 @@ import {
   LoginDto,
   ValidateDto,
   TwoFADto,
+  TOTPDto,
 } from 'src/dto/auth.dto';
 import { ExceptionDto } from 'src/dto/exception.dto';
 import { AuthService } from './auth.service';
@@ -57,7 +58,7 @@ export class AuthController {
   @ApiTags('Authentication')
   @ApiOkResponse({
     description: 'User is authenticated.',
-    type: UserDto,
+    type: ValidateDto,
   })
   @ApiUnauthorizedResponse({
     description: 'User is not authorised to perform this action.',
@@ -87,6 +88,10 @@ export class AuthController {
 
   @ApiBearerAuth()
   @ApiTags('Authentication')
+  @ApiBody({
+    description: 'Provide TOTP from your authenticator app.',
+    type: TOTPDto,
+  })
   @ApiOkResponse({
     description: 'User is authenticated.',
     type: UserDto,
@@ -99,5 +104,37 @@ export class AuthController {
   @Post('2faverify')
   twoFaVerify(@Req() req): Promise<UserDto> {
     return this.authService.twoFaVerify(req);
+  }
+
+  @ApiBearerAuth()
+  @ApiTags('Authentication')
+  @ApiOkResponse({
+    description: 'User is authorised.',
+    type: ValidateDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorised to perform this action.',
+    type: ExceptionDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('access')
+  validateAccess(@Req() req): Promise<ValidateDto> {
+    return this.authService.validateAccess(req);
+  }
+
+  @ApiBearerAuth()
+  @ApiTags('Authentication')
+  @ApiOkResponse({
+    description: 'User is authorised.',
+    type: ValidateDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorised to perform this action.',
+    type: ExceptionDto,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('admin')
+  validateAdmin(@Req() req): Promise<ValidateDto> {
+    return this.authService.validateAdmin(req);
   }
 }
