@@ -125,6 +125,7 @@ export class AuthService {
       secret: base32Secret,
       encoding: 'base32',
       token: userToken,
+      window: 1,
     });
 
     if (!verified) throw new UnauthorizedException('Invalid token provided.');
