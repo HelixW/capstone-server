@@ -37,7 +37,7 @@ export class IpfsService {
 
     const decodedToken: any = this.jwtService.decode(token);
 
-    if (decodedToken.access !== res.access)
+    if (decodedToken.access === 1 && res.access === 2)
       throw new UnauthorizedException(
         'User is not authorised to perform this action.',
       );
